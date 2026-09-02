@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Portfolio Website" />
+    <meta name="author" content="Dennis Eduardo Melara" />
+    <meta name="keywords" content="Dennis Melara, Paralegal, Systems Engineering, Legal Tech, Cybersecurity, Automation" />
+    <link rel="shortcut icon" href="./assets/img/favicon.ico" />
+    <title>Dennis Eduardo Melara</title>
+    <link rel="stylesheet" href="./assets/css/main.css" />
+
+    <style>
+      /* ===== TABS ===== */
+      .profile-tabs-container { width: 90%; max-width: 960px; margin: 40px auto; }
+      .profile-tabs {
+        display: flex; gap: 10px; margin-bottom: 20px;
+        border-bottom: 1px solid rgba(128,128,128,0.2);
+        justify-content: center; flex-wrap: wrap;
+      }
+      .ptab-btn {
+        background: none; border: none; cursor: pointer;
+        color: var(--text-color); opacity: 0.6;
+        font-size: 16px; font-weight: bold;
+        padding: 12px 20px;
+        border-bottom: 3px solid transparent;
+        transition: all 0.3s ease;
+      }
+      .ptab-btn.active { opacity: 1; color: var(--accent-color); border-bottom: 3px solid var(--accent-color); }
+      .ptab-btn:hover { opacity: 1; }
+      .ptab-content-wrapper {
+        background: rgba(128,128,128,0.05);
+        border: 1px solid rgba(128,128,128,0.1);
+        border-radius: 8px; padding: 30px; min-height: 220px;
+      }
+      .ptab-panel { display: none; animation: fadeIn 0.4s ease; }
+      .ptab-panel.active { display: block; }
+      .ptab-panel h3 { color: var(--accent-color); margin-top: 0; font-size: 1.5rem; }
+      .ptab-panel p { text-align: justify; margin-bottom: 15px; }
+      .skill-chips { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+      .skill-chips span {
+        border: 1px solid var(--accent-color); color: var(--text-color);
+        padding: 5px 15px; border-radius: 20px; font-size: 14px; font-weight: 600; opacity: 0.9;
+      }
+
+      /* ===== CV DOWNLOAD BUTTON ===== */
+      .cv-download-btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        margin-top: 24px; padding: 12px 28px;
+        background: var(--accent-color); color: #fff;
+        border: none; border-radius: 8px;
+        font-size: 15px; font-weight: 600;
+        text-decoration: none; cursor: pointer;
+        transition: background 0.3s ease, transform 0.15s ease;
+      }
+      .cv-download-btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+
+      /* ===== ALTERNATING PROJECT ROWS ===== */
+      .project-row {
+        display: flex; gap: 24px; align-items: center;
+        margin-top: 28px; flex-wrap: wrap;
+      }
+      .project-row.reverse { flex-direction: row-reverse; }
+      .project-media {
+        flex: 1 1 300px; min-width: 260px;
+        aspect-ratio: 16/10; border-radius: 8px;
+        border: 1px solid rgba(128,128,128,0.12);
+        background: rgba(128,128,128,0.06);
+        display: flex; align-items: center; justify-content: center;
+        overflow: hidden;
+      }
+      .project-media img, .project-media video {
+        width: 100%; height: 100%; object-fit: cover;
+      }
+      .project-media .placeholder-text {
+        color: var(--text-color); opacity: 0.3; font-size: 13px;
+        font-weight: 500; text-align: center; padding: 20px;
+      }
+      .project-detail {
+        flex: 1 1 300px; min-width: 260px;
+      }
+      .project-detail h4 {
+        margin: 0 0 8px; padding: 0; font-size: 1.1rem;
+        font-weight: 600; color: var(--text-color) !important;
+      }
+      .project-detail p {
+        margin: 0 0 12px; font-size: 0.9rem; opacity: 0.75; line-height: 1.6;
+      }
+      .project-tech-icons {
+        display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+      }
+      .project-tech-icons img {
+        height: 28px; width: 28px; opacity: 0.7;
+        transition: opacity 0.2s; filter: grayscale(30%);
+      }
+      .project-tech-icons img:hover { opacity: 1; filter: none; }
+
+            /* ===== MIND MAP (descending tree, breaks out of the tab card) ===== */
+      .ptab-content-wrapper:has(#tab-cyber.active) {
+        background: transparent;
+        border: none;
+        padding: 30px 0;
+      }
+
+       .mindmap-container {
+        width: 100%;
+        overflow-x: visible;
+        padding: 20px 0;
+      }
+
+      .mindmap-tree {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        padding: 10px 20px 20px;
+      }
+
+      /* ROOT NODE (top, center) */
+      .mindmap-root-node {
+        background: var(--accent-color);
+        color: #fff;
+        font-weight: 800;
+        font-size: 1.05rem;
+        padding: 16px 28px;
+        border-radius: 14px;
+        text-align: center;
+        line-height: 1.3;
+        white-space: nowrap;
+        box-shadow: 0 2px 12px rgba(30,90,156,0.25);
+        body.dark-mode .mindmap-root-node { box-shadow: 0 2px 12px rgba(91,192,190,0.3); }
+      }
+
+      /* Trunk: vertical line from the root down to the branches row */
+      .mindmap-trunk {
+        width: 2px;
+        height: 28px;
+        background: var(--accent-color);
+        opacity: 0.6;
+      }
+
+      /* Row holding every category branch, joined by a horizontal line */
+      .mindmap-branches {
+        position: relative;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 36px 22px;
+        width: 100%;
+        padding-top: 22px;
+      }
+      .mindmap-branches::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 3%;
+        right: 3%;
+        height: 2px;
+        background: var(--accent-color);
+        opacity: 0.35;
+      }
+
+      /* Each branch: category node + its leaves, stacked DOWNWARD */
+      .mindmap-category {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 0 0 auto;
+        padding-top: 22px;
+      }
+      /* Stub line from the horizontal trunk line down to the category node */
+      .mindmap-category::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 2px;
+        height: 22px;
+        background: var(--accent-color);
+        opacity: 0.35;
+        transform: translateX(-50%);
+      }
+
+      .category-node {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px 16px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 0.85rem;
+        white-space: nowrap;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border: 2px solid transparent;
+      }
+      .category-node:hover {
+        transform: scale(1.04);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      }
+
+      /* Status dot on category */
+        .cat-status { display: none; }     
+      /* CATEGORY COLORS — each phase has its own bg */
+/* DESPUÉS */
+.cat-c0 { background: #22675c; color: #daf1ed; }
+.cat-c1 { background: #226467; color: #daf0f1; }
+.cat-c2 { background: #225467; color: #daeaf1; }
+.cat-c3 { background: #224567; color: #dae6f1; }
+.cat-c4 { background: #223667; color: #dae1f1; }
+.cat-c5 { background: #222667; color: #dadbf1; }
+.cat-c6 { background: #2e2267; color: #dedaf1; }
+body.dark-mode .cat-c0 { background: #2b8878; color: #e1f4f1; }
+body.dark-mode .cat-c1 { background: #2b8388; color: #e1f3f4; }
+body.dark-mode .cat-c2 { background: #2b6d88; color: #e1eff4; }
+body.dark-mode .cat-c3 { background: #2b5988; color: #e1ebf4; }
+body.dark-mode .cat-c4 { background: #2b4588; color: #e1e7f4; }
+body.dark-mode .cat-c5 { background: #2b2f88; color: #e1e2f4; }
+body.dark-mode .cat-c6 { background: #3a2b88; color: #e4e1f4; }
+
+      /* Leaf area (courses) — expands DOWNWARD below its category */
+      .cat-leaves {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        gap: 4px;
+      }
+      .mindmap-category.expanded .cat-leaves {
+        display: flex;
+      }
+      /* Small dashed connector bridging the category node to its leaves */
+      .mindmap-category.expanded .cat-leaves::before {
+        content: '';
+        width: 0;
+        height: 10px;
+        border-left: 2px dashed rgba(128,128,128,0.4);
+        margin-bottom: 4px;
+      }
+
+      /* Leaf node (course item) */
+      .leaf-node {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        background: rgba(128,128,128,0.08);
+        border: 1px solid rgba(128,128,128,0.12);
+        font-size: 0.78rem;
+        cursor: pointer;
+        transition: background 0.15s ease, border-color 0.15s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .leaf-node:hover {
+  background: rgba(30,90,156,0.1);
+  border-color: var(--accent-color);
+}
+body.dark-mode .leaf-node:hover { background: rgba(91,192,190,0.12); }
+      .leaf-node .fa { opacity: 0.45; font-size: 11px; }
+      /* Icono gris por defecto (cursos no completados) */
+.leaf-node .fa-certificate {
+  color: inherit;
+  opacity: 0.45;
+}
+
+/* Icono dorado SOLO para los cursos completados */
+.leaf-node.completed .fa-certificate {
+  color: #FFD700;
+  opacity: 1;
+}
+      .leaf-node:hover .fa { opacity: 0.8; }
+      .leaf-node .suggested-badge {
+        display: inline-block; font-size: 8px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.05em;
+        color: #f59e0b; border: 1px solid rgba(245,158,11,0.4);
+        border-radius: 3px; padding: 1px 4px; margin-left: 4px;
+        vertical-align: middle;
+      }
+
+      /* Legend for the mind map */
+      .mindmap-legend {
+        display: flex; gap: 16px; flex-wrap: wrap;
+        justify-content: center; margin-bottom: 16px;
+      }
+      .mm-legend-item {
+        display: flex; align-items: center; gap: 6px;
+        font-size: 12px; font-weight: 500; opacity: 0.8;
+      }
+      .mm-legend-item::before {
+        content: ''; width: 10px; height: 10px;
+        border-radius: 3px; display: inline-block;
+      }
+      .mm-legend-item.completed::before { background: var(--accent-color); }
+      .mm-legend-item.current::before { background: #f59e0b; }
+      .mm-legend-item.upcoming::before { background: rgba(128,128,128,0.3); }
+
+      /* Expand/collapse arrow on category nodes */
+      .cat-toggle {
+        font-size: 10px; opacity: 0.5;
+        transition: transform 0.2s ease;
+        margin-left: 4px;
+      }
+      .mindmap-category.expanded .cat-toggle {
+        transform: rotate(180deg);
+      }
+
+      /* ===== COURSE MODAL ===== */
+      .course-modal-overlay {
+        display: none; position: fixed; inset: 0;
+        background: rgba(0,0,0,0.6);
+        backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+        z-index: 10000; justify-content: center; align-items: center; padding: 20px;
+      }
+      .course-modal-overlay.active { display: flex; }
+      .modal-content {
+        background: var(--bg-color, #1a1a1a);
+        border: 1px solid rgba(128,128,128,0.15);
+        border-radius: 12px; padding: 28px;
+        max-width: 420px; width: 100%; position: relative;
+        animation: modalIn 0.25s ease;
+      }
+      @keyframes modalIn {
+        from { opacity: 0; transform: translateY(8px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+      .modal-close {
+        position: absolute; top: 12px; right: 16px;
+        background: none; border: none; color: var(--text-color);
+        font-size: 22px; cursor: pointer; opacity: 0.5;
+        transition: opacity 0.2s; line-height: 1;
+      }
+      .modal-close:hover { opacity: 1; }
+      .modal-content h4 {
+        margin: 0 0 20px; padding: 0; font-size: 1.1rem;
+        font-weight: 600; color: var(--text-color) !important;
+        padding-right: 30px; line-height: 1.4;
+      }
+      .modal-links { display: flex; flex-direction: column; gap: 10px; }
+      .modal-btn {
+        display: flex; align-items: center; gap: 12px;
+        padding: 14px 18px; border-radius: 8px;
+        text-decoration: none; font-size: 14px; font-weight: 600;
+        transition: background 0.2s ease, border-color 0.2s ease;
+        border: 1px solid rgba(128,128,128,0.12);
+        color: var(--text-color);
+      }
+.modal-btn:hover { background: rgba(30,90,156,0.08); border-color: var(--accent-color); }
+body.dark-mode .modal-btn:hover { background: rgba(91,192,190,0.1); }      .modal-btn .fa { font-size: 18px; width: 22px; text-align: center; opacity: 0.7; }
+
+      .modal-btn-text .modal-label { font-size: 12px; opacity: 0.5; font-weight: 400; display: block; }
+      .modal-btn.disabled { opacity: 0.35; pointer-events: none; }
+
+/* ===== PROFESSIONAL CERTIFICATIONS (strip below the roadmap tree) ===== */
+.pro-certs-section {
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 1px solid rgba(128,128,128,0.15);
+}
+.pro-certs-title {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-color);
+  opacity: 0.85;
+  margin: 0 0 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.pro-certs-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  justify-content: center;
+}
+.pro-cert-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 320px;
+  max-width: 100%;
+  padding: 14px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(128,128,128,0.15);
+  background: rgba(128,128,128,0.05);
+  text-decoration: none;
+  color: var(--text-color);
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.15s ease;
+}
+.pro-cert-card:hover {
+  border-color: var(--accent-color);
+  background: rgba(30,90,156,0.06);
+  transform: translateY(-1px);
+}
+body.dark-mode .pro-cert-card:hover { background: rgba(91,192,190,0.08); }
+.pro-cert-icon {
+  flex-shrink: 0;
+  width: 38px; height: 38px;
+  border-radius: 8px;
+  background: var(--accent-color);
+  color: var(--accent-text, #fff);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px;
+}
+.pro-cert-body { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.pro-cert-name { font-size: 0.85rem; font-weight: 700; line-height: 1.3; }
+.pro-cert-issuer { font-size: 0.72rem; opacity: 0.65; }
+.pro-cert-date { font-size: 0.7rem; opacity: 0.5; }
+.pro-cert-link-icon { margin-left: auto; font-size: 12px; opacity: 0.35; flex-shrink: 0; }
+.pro-cert-card:hover .pro-cert-link-icon { opacity: 0.7; }
+
+
+
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+  </head>
+
+  <body>
+    <button id="theme-toggle" class="theme-toggle-btn" aria-label="Cambiar tema">
+      <i class="fa fa-moon-o" id="theme-icon"></i>
+    </button>
+    
+    <div id="particles-js">
+      <div class="header">
+        <h1>
+          <span class="site-title">Dennis Eduardo Melara</span>
+          <span class="site-description">Immigration Paralegal → Systems Engineer | Cybersecurity</span>
+        </h1>
+        <div class="header-icons">
+          <a aria-label="My LinkedIn Profile" target="_blank" href="https://www.linkedin.com/in/dennis-eduardo-melara-zepeda-241a33422/">
+            <i class="icon fa fa-linkedin" aria-hidden="true"></i>
+          </a>
+          <a aria-label="My Github Profile" target="_blank" href="https://github.com/EduardoMelara">
+            <i class="icon fa fa-github-alt" aria-hidden="true"></i>
+          </a>
+          <a aria-label="My Résumé" target="_blank" href="./Dennis_Eduardo_Melara_Zepeda_Resume-paralegal.pdf">
+            <i class="icon fa fa-file-pdf-o" aria-hidden="true"></i>
+          </a>
+          <a aria-label="Send Email" href="mailto:melaraeduardo661@gmail.com" target="_blank">
+            <i class="icon fa fa-envelope"></i>
+          </a>
+        </div>
+        <div class="header-links">
+          <a class="link" href="#about" data-scroll>About Me</a>
+        </div>
+      </div>
+      <a class="down" href="#about" data-scroll><i class="icon fa fa-chevron-down" aria-hidden="true"></i></a>
+    </div>
+
+    <!-- About Section -->
+    <section id="about">
+      <div class="user-details">
+        <h1>My Story</h1>
+        <picture>
+          <source type="image/webp" srcset="./perfil.jpg" alt="Professional Me" width="20%" style="border-radius: 50%" />
+          <img src="./perfil.jpg" alt="Professional Me" width="20%" style="border-radius: 50%" />
+        </picture>
+        <p>
+          I am a bilingual professional bridging the gap between legal operations and technology. With over 3 years of experience as an Immigration Paralegal in high-volume US law firms, I specialize in managing complex dockets and drafting legal motions. Concurrently pursuing a degree in Computer Systems Engineering, I apply technical logic to automate workflows and audit case files. Currently, I am actively transitioning into the Cybersecurity field, focusing on offensive and defensive security strategies to protect critical data infrastructure.
+        </p>
+      </div>
+
+      <div class="profile-tabs-container">
+        <nav class="profile-tabs" role="tablist">
+          <button class="ptab-btn active" data-target="tab-paralegal" role="tab">Immigration Paralegal</button>
+          <button class="ptab-btn" data-target="tab-automation" role="tab">Systems & Automation</button>
+          <button class="ptab-btn" data-target="tab-cyber" role="tab">Cybersecurity</button>
+        </nav>
+
+        <div class="ptab-content-wrapper">
+          
+          <!-- ===== TAB: PARALEGAL ===== -->
+          <div id="tab-paralegal" class="ptab-panel active">
+            <h3>Legal Operations & Case Management</h3>
+            <p>Advanced management of legal workflows in high-volume, remote environments. I possess a proven track record of managing complex dockets across EOIR and USCIS jurisdictions. I have successfully drafted and filed over 1,500 motions, including Motions to Substitute (MTS), Terminate, Vacate, Sever, and Consolidate, maintaining strict compliance with judicial deadlines.</p>
+            <p>My expertise encompasses the entire application lifecycle, from initial narrative drafting and evidence assembly for I-589 (Asylum), I-765, and U-Visas, to executing Written Pleadings and Mendez-Rojas filings. I proactively audit case files for Biostamps and identity documents to prevent processing delays and educate clients on complex case outcomes.</p>
+            <div class="skill-chips">
+              <span>EOIR / USCIS Dockets</span>
+              <span>Motion Litigation</span>
+              <span>Evidence Management</span>
+              <span>Client Advisory</span>
+            </div>
+            <a class="cv-download-btn" href="./Dennis_Eduardo_Melara_Zepeda_Resume-paralegal.pdf" download>
+              <i class="fa fa-download"></i> Download Resume (PDF)
+            </a>
+          </div>
+
+          <!-- ===== TAB: SYSTEMS & AUTOMATION (Alternating Layout) ===== -->
+          <div id="tab-automation" class="ptab-panel">
+            <h3>Technical Logic Applied to Legal Workflows</h3>
+            <p>Leveraging Systems Engineering principles, I optimize legal operations by identifying inefficiencies and deploying programmatic solutions. I develop custom scripts and tools to automatically audit case files, manage Box cloud directories, and ensure strict compliance with 30-day appeal deadlines.</p>
+
+            <!-- Project #1: Media LEFT, Description RIGHT -->
+            <div class="project-row">
+              <div class="project-media">
+                <div class="placeholder-text"><i class="fa fa-play-circle" style="font-size:32px;display:block;margin-bottom:8px;"></i>Screenshot / Video<br>Coming Soon</div>
+              </div>
+              <div class="project-detail">
+                <h4>EOIR Analyzer</h4>
+                <p>Python module that automatically audits case files, verifies compliance with 30-day appeal deadlines, and flags missing documents across EOIR dockets.</p>
+                <div class="project-tech-icons">
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/python.svg" alt="Python" style="filter: invert(55%) sepia(78%) saturate(491%) hue-rotate(166deg) brightness(96%) contrast(92%)" />
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/github.svg" alt="GitHub" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Project #2: Description LEFT, Media RIGHT -->
+            <div class="project-row reverse">
+              <div class="project-media">
+                <div class="placeholder-text"><i class="fa fa-play-circle" style="font-size:32px;display:block;margin-bottom:8px;"></i>Screenshot / Video<br>Coming Soon</div>
+              </div>
+              <div class="project-detail">
+                <h4>Box Cloud Directory Manager</h4>
+                <p>Automated system for managing and organizing case files in Box cloud storage, with batch operations and compliance verification.</p>
+                <div class="project-tech-icons">
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/python.svg" alt="Python" style="filter: invert(55%) sepia(78%) saturate(491%) hue-rotate(166deg) brightness(96%) contrast(92%)" />
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/icloud.svg" alt="Cloud" style="filter: invert(50%) sepia(20%) saturate(500%) hue-rotate(180deg)" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Project #3: Media LEFT, Description RIGHT -->
+            <div class="project-row">
+              <div class="project-media">
+                <div class="placeholder-text"><i class="fa fa-play-circle" style="font-size:32px;display:block;margin-bottom:8px;"></i>Screenshot / Video<br>Coming Soon</div>
+              </div>
+              <div class="project-detail">
+                <h4>Workflow Automation Scripts</h4>
+                <p>Collection of custom scripts that automate repetitive legal tasks — from document generation to deadline tracking and client notifications.</p>
+                <div class="project-tech-icons">
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/python.svg" alt="Python" style="filter: invert(55%) sepia(78%) saturate(491%) hue-rotate(166deg) brightness(96%) contrast(92%)" />
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/gnubash.svg" alt="Bash" style="filter: invert(50%)" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Project #4: Description LEFT, Media RIGHT -->
+            <div class="project-row reverse">
+              <div class="project-media">
+                <div class="placeholder-text"><i class="fa fa-play-circle" style="font-size:32px;display:block;margin-bottom:8px;"></i>Screenshot / Video<br>Coming Soon</div>
+              </div>
+              <div class="project-detail">
+                <h4>IT Security Protocols</h4>
+                <p>Documentation and implementation of security best practices for office IT infrastructure, including access controls and data handling procedures.</p>
+                <div class="project-tech-icons">
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/windows.svg" alt="Windows" style="filter: invert(45%) sepia(60%) saturate(600%) hue-rotate(185deg)" />
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/linux.svg" alt="Linux" style="filter: invert(50%)" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+                    <!-- ===== TAB: CYBERSECURITY MIND MAP ===== -->
+          <div id="tab-cyber" class="ptab-panel">
+            <h3 style="text-align:center;margin:0 0 6px;">Cybersecurity & Networks Roadmap</h3>
+            <p style="text-align:center;font-size:0.9rem;opacity:0.6;margin:0 0 12px;">Click any node to expand courses. Click a course to view certificate & notes.</p>
+            <div class="mindmap-legend">
+              </div>
+
+            <div class="mindmap-container">
+              <div class="mindmap-tree">
+
+                <!-- ROOT -->
+                <div class="mindmap-root-node">Cybersecurity & Networks</div>
+                <div class="mindmap-trunk"></div>
+
+                <!-- ====== ALL BRANCHES (Phases 0–13), descending from the trunk ====== -->
+                <div class="mindmap-branches">
+
+                  <!-- Phase 0 -->
+                  <div class="mindmap-category" data-status="completed">
+                    <div class="category-node cat-c0" onclick="toggleMindmapNode(this)">
+                      <span class="cat-status completed"></span>
+                      IT & Hardware Fundamentals
+                      <span class="cat-toggle"><i class="fa fa-chevron-down"></i></span>
+                    </div>
+                    <div class="cat-leaves">
+                      <div class="leaf-node completed" onclick="openCourseModal('Informática desde cero (Windows 11/10/8/7/Vista/XP)', 'assets/certs/informatica-desde-cero.pdf', '')">Informática desde cero <i class="fa fa-certificate"></i></div>                      <div class="leaf-node completed" onclick="openCourseModal('Ensamblaje y Mantenimiento de PC', 'assets/certs/master-hardware.pdf', 'assets/notes/master-hardware.pdf')">Master Hardware <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node completed" onclick="openCourseModal('Windows 10 Complete Course: From Zero to Professional', 'assets/certs/windows10-complete.pdf', '')">Windows 10: Zero to Pro <i class="fa fa-certificate"></i></div>
+                    </div>
+                  </div>
+
+                  <!-- Phase 1 -->
+                  <div class="mindmap-category" data-status="completed">
+                    <div class="category-node cat-c1" onclick="toggleMindmapNode(this)">
+                      <span class="cat-status completed"></span>
+                      OS & Command Line
+                      <span class="cat-toggle"><i class="fa fa-chevron-down"></i></span>
+                    </div>
+                    <div class="cat-leaves">
+                      <div class="leaf-node completed" onclick="openCourseModal('Linux Command Line', 'assets/certs/linux-cli.pdf', 'assets/notes/linux-cli.pdf')">Linux Command Line <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('CentOS & Ubuntu: Managing Packages', 'assets/certs/centos-ubuntu.pdf', 'assets/notes/centos-ubuntu.pdf')">CentOS & Ubuntu Packages <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Linux Bash Shell Scripting (AWK, SED + 10 projects)', 'assets/certs/bash-scripting.pdf', 'assets/notes/bash-scripting.pdf')">Bash Scripting (AWK, SED) <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Windows Server 2019 Mastery', 'assets/certs/win-server-2019.pdf', 'assets/notes/win-server-2019.pdf')">Windows Server 2019 <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Active Directory & Windows Server (2025)', 'assets/certs/active-directory.pdf', 'assets/notes/active-directory.pdf')">Active Directory <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('PowerShell para Administración y Seguridad', 'assets/certs/powershell-admin.pdf', 'assets/notes/powershell-admin.pdf')">PowerShell Admin & Security <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Mastering Exchange Server with PowerShell', 'assets/certs/exchange-powershell.pdf', 'assets/notes/exchange-powershell.pdf')">Exchange Server + PowerShell <i class="fa fa-certificate"></i></div>
+                    </div>
+                  </div>
+
+                  <!-- Phase 2 -->
+                  <div class="mindmap-category" data-status="completed">
+                    <div class="category-node cat-c2" onclick="toggleMindmapNode(this)">
+                      <span class="cat-status completed"></span>
+                      Network Fundamentals
+                      <span class="cat-toggle"><i class="fa fa-chevron-down"></i></span>
+                    </div>
+                    <div class="cat-leaves">
+                      <div class="leaf-node" onclick="openCourseModal('CompTIA Network+', 'assets/certs/comptia-network.pdf', 'assets/notes/comptia-network.pdf')">CompTIA Network+ <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Virtual CCNA Lab Network', 'assets/certs/ccna-lab.pdf', 'assets/notes/ccna-lab.pdf')">Virtual CCNA Lab <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Firewall: pfSense Config', 'assets/certs/pfsense.pdf', 'assets/notes/pfsense.pdf')">pfSense Firewall <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Fortinet: Beginner to Expert', 'assets/certs/fortinet.pdf', 'assets/notes/fortinet.pdf')">Fortinet <i class="fa fa-certificate"></i></div>
+                    </div>
+                  </div>
+
+                  <!-- Phase 3 -->
+                  <div class="mindmap-category" data-status="current">
+                    <div class="category-node cat-c3" onclick="toggleMindmapNode(this)">
+                      <span class="cat-status current"></span>
+                      Programming / Scripting
+                      <span class="cat-toggle"><i class="fa fa-chevron-down"></i></span>
+                    </div>
+                    <div class="cat-leaves">
+                      <div class="leaf-node" onclick="openCourseModal('Complete Python For Beginners', 'assets/certs/python-beginners.pdf', 'assets/notes/python-beginners.pdf')">Python For Beginners <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Python Network Programming', 'assets/certs/python-networking.pdf', 'assets/notes/python-networking.pdf')">Python Networking <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Git and GitHub For Beginners', 'assets/certs/git-github.pdf', 'assets/notes/git-github.pdf')">Git & GitHub <i class="fa fa-certificate"></i></div>
+                    </div>
+                  </div>
+
+                  <!-- Phase 4 -->
+                  <div class="mindmap-category" data-status="upcoming">
+                    <div class="category-node cat-c4" onclick="toggleMindmapNode(this)">
+                      <span class="cat-status upcoming"></span>
+                      Cybersecurity Fundamentals
+                      <span class="cat-toggle"><i class="fa fa-chevron-down"></i></span>
+                    </div>
+                    <div class="cat-leaves">
+                      <div class="leaf-node" onclick="openCourseModal('CompTIA Security+', 'assets/certs/comptia-security.pdf', 'assets/notes/comptia-security.pdf')">CompTIA Security+<i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Information Security Fundamentals', 'assets/certs/infosec-fundamentals.pdf', 'assets/notes/infosec-fundamentals.pdf')">InfoSec Fundamentals <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Seguridad Informática desde Cero', 'assets/certs/seguridad-cero.pdf', 'assets/notes/seguridad-cero.pdf')">Seguridad Informática <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Introduction to Encryption', 'assets/certs/encryption-intro.pdf', 'assets/notes/encryption-intro.pdf')">Intro to Encryption <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Windows Endpoint Security', 'assets/certs/windows-endpoint.pdf', 'assets/notes/windows-endpoint.pdf')">Windows Endpoint Security <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Phishing Detection & Protection', 'assets/certs/phishing.pdf', 'assets/notes/phishing.pdf')">Phishing Detection <i class="fa fa-certificate"></i></div>
+                    </div>
+                  </div>
+
+                  <!-- Phase 5 -->
+                  <div class="mindmap-category" data-status="upcoming">
+                    <div class="category-node cat-c5" onclick="toggleMindmapNode(this)">
+                      <span class="cat-status upcoming"></span>
+                      Ethical Hacking & Pentesting
+                      <span class="cat-toggle"><i class="fa fa-chevron-down"></i></span>
+                    </div>
+                    <div class="cat-leaves">
+                      <div class="leaf-node" onclick="openCourseModal('Kali Linux · Pentesting · Hacking', 'assets/certs/kali-pentesting.pdf', 'assets/notes/kali-pentesting.pdf')">Kali Linux Pentesting <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Nmap For Cyber Security', 'assets/certs/nmap-course.pdf', 'assets/notes/nmap-course.pdf')">Nmap <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Metasploit Framework (A-Z)', 'assets/certs/metasploit.pdf', 'assets/notes/metasploit.pdf')">Metasploit (A-Z) <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Network Ethical Hacking (Kali)', 'assets/certs/network-hacking.pdf', 'assets/notes/network-hacking.pdf')">Network Ethical Hacking <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Ultimate Ethical Hacking Course', 'assets/certs/ultimate-hacking.pdf', 'assets/notes/ultimate-hacking.pdf')">Ultimate Ethical Hacking <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Hacking Ético con Kali Linux', 'assets/certs/hacking-kali.pdf', 'assets/notes/hacking-kali.pdf')">Hacking Ético con Kali <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('CEH Practice Test (2023)', 'assets/certs/ceh-practice.pdf', 'assets/notes/ceh-practice.pdf')">CEH Practice Test <i class="fa fa-certificate"></i></div>
+                    </div>
+                  </div>
+
+                  <!-- Phase 6 -->
+                  <div class="mindmap-category" data-status="upcoming">
+                    <div class="category-node cat-c6" onclick="toggleMindmapNode(this)">
+                      <span class="cat-status upcoming"></span>
+                      Offensive Specializations
+                      <span class="cat-toggle"><i class="fa fa-chevron-down"></i></span>
+                    </div>
+                    <div class="cat-leaves">
+                      <div class="leaf-node" onclick="openCourseModal('Linux Privilege Escalation', 'assets/certs/priv-escalation.pdf', 'assets/notes/priv-escalation.pdf')">Privilege Escalation <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Web Pentesting', 'assets/certs/web-pentesting.pdf', 'assets/notes/web-pentesting.pdf')">Web App Pentesting <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('JS for Hackers & Pentesters (XSS)', 'assets/certs/js-hackers.pdf', 'assets/notes/js-hackers.pdf')">JS for Hackers (XSS) <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Recon For Bug Bounty', 'assets/certs/recon-bugbounty.pdf', 'assets/notes/recon-bugbounty.pdf')">Recon For Bug Bounty <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('WiFi Hacking', 'assets/certs/wifi-hacking.pdf', 'assets/notes/wifi-hacking.pdf')">WiFi Hacking <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Social Engineering', 'assets/certs/social-engineering.pdf', 'assets/notes/social-engineering.pdf')">Social Engineering <i class="fa fa-certificate"></i></div>
+                    </div>
+                  </div>
+
+                  <!-- Phase 7 -->
+                  <div class="mindmap-category" data-status="upcoming">
+                    <div class="category-node cat-c0" onclick="toggleMindmapNode(this)">
+                      <span class="cat-status upcoming"></span>
+                      Malware, RE & Forensics
+                      <span class="cat-toggle"><i class="fa fa-chevron-down"></i></span>
+                    </div>
+                    <div class="cat-leaves">
+                      <div class="leaf-node" onclick="openCourseModal('Malware Analysis', 'assets/certs/malware.pdf', 'assets/notes/malware.pdf')">Virus, Trojans & Malware <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Reverse Engineering & Memory Hacking', 'assets/certs/reverse-eng.pdf', 'assets/notes/reverse-eng.pdf')">Reverse Engineering <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Computer Forensics (DFIR)', 'assets/certs/forensics.pdf', 'assets/notes/forensics.pdf')">Computer Forensics (DFIR) <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Systems Auditing', 'assets/certs/auditorias.pdf', 'assets/notes/auditorias.pdf')">Systems Auditing <i class="fa fa-certificate"></i></div>
+                    </div>
+                  </div>
+
+                  <!-- Phase 8 -->
+                  <div class="mindmap-category" data-status="upcoming">
+                    <div class="category-node cat-c1" onclick="toggleMindmapNode(this)">
+                      <span class="cat-status upcoming"></span>
+                      Privacy, Anonymity & OSINT
+                      <span class="cat-toggle"><i class="fa fa-chevron-down"></i></span>
+                    </div>
+                    <div class="cat-leaves">
+                      <div class="leaf-node" onclick="openCourseModal('OSINT', 'assets/certs/osint.pdf', 'assets/notes/osint.pdf')">OSINT<i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Deep Web Introduction', 'assets/certs/deep-web.pdf', 'assets/notes/deep-web.pdf')">Deep Web Intro <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Network Anonymity & Privacy', 'assets/certs/anonimato.pdf', 'assets/notes/anonimato.pdf')">Network Anonymity <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Web Cybersecurity', 'assets/certs/ciberseguridad-web.pdf', 'assets/notes/ciberseguridad-web.pdf')">Web Cybersecurity <i class="fa fa-certificate"></i></div>
+                    </div>
+                  </div>
+
+                  <!-- Phase 9 -->
+                  <div class="mindmap-category" data-status="upcoming">
+                    <div class="category-node cat-c2" onclick="toggleMindmapNode(this)">
+                      <span class="cat-status upcoming"></span>
+                      Governance & Certifications
+                      <span class="cat-toggle"><i class="fa fa-chevron-down"></i></span>
+                    </div>
+                    <div class="cat-leaves">
+  <div class="leaf-node" onclick="openCourseModal('Análisis y Planeación de la Auditoria de Informática', 'assets/certs/auditoria-informatica.pdf', 'assets/notes/auditoria-informatica.pdf')">Auditoría de Informática <i class="fa fa-certificate"></i></div>
+  <div class="leaf-node" onclick="openCourseModal('NIST RMF', 'assets/certs/nist-rmf.pdf', 'assets/notes/nist-rmf.pdf')">NIST RMF <i class="fa fa-certificate"></i></div><div class="leaf-node" onclick="openCourseModal('NIST CSF', 'assets/certs/nist-csf.pdf', 'assets/notes/nist-csf.pdf')">NIST CSF <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('ISO/IEC 27001', 'assets/certs/iso-27001.pdf', 'assets/notes/iso-27001.pdf')">ISO/IEC 27001 <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('CISSP All Domains', 'assets/certs/cissp.pdf', 'assets/notes/cissp.pdf')">CISSP Exam Prep <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Cisco CCIE Security v6', 'assets/certs/ccie-security.pdf', 'assets/notes/ccie-security.pdf')">Cisco CCIE Security v6 <i class="fa fa-certificate"></i></div>
+                    </div>
+                  </div>
+
+                  <!-- Phase 10 -->
+                  <div class="mindmap-category" data-status="upcoming">
+                    <div class="category-node cat-c3" onclick="toggleMindmapNode(this)">
+                      <span class="cat-status upcoming"></span>
+                      Cloud Computing
+                      <span class="cat-toggle"><i class="fa fa-chevron-down"></i></span>
+                    </div>
+                    <div class="cat-leaves">
+                      <div class="leaf-node" onclick="openCourseModal('AZ-900: Azure Fundamentals', 'assets/certs/az-900.pdf', 'assets/notes/az-900.pdf')">AZ-900 Azure <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('AZ-104: Azure Administrator', 'assets/certs/az-104.pdf', 'assets/notes/az-104.pdf')">AZ-104 Azure Admin <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('AWS Cloud Practitioner', 'assets/certs/aws-ccp.pdf', 'assets/notes/aws-ccp.pdf')">AWS Cloud Practitioner <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('AWS Solutions Architect', 'assets/certs/aws-saa.pdf', 'assets/notes/aws-saa.pdf')">AWS Solutions Architect <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('GCP Associate Cloud Engineer', 'assets/certs/gcp-ace.pdf', 'assets/notes/gcp-ace.pdf')">GCP Cloud Engineer <i class="fa fa-certificate"></i></div>
+                    </div>
+                  </div>
+
+                  <!-- Phase 11 -->
+                  <div class="mindmap-category" data-status="upcoming">
+                    <div class="category-node cat-c4" onclick="toggleMindmapNode(this)">
+                      <span class="cat-status upcoming"></span>
+                      DevSecOps & Cloud Security
+                      <span class="cat-toggle"><i class="fa fa-chevron-down"></i></span>
+                    </div>
+                    <div class="cat-leaves">
+                      <div class="leaf-node" onclick="openCourseModal('Docker for Beginners', 'assets/certs/docker.pdf', 'assets/notes/docker.pdf')">Docker <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('DevOps: Docker, Kubernetes, Jenkins', 'assets/certs/devops-intro.pdf', 'assets/notes/devops-intro.pdf')">DevOps: Docker, K8s <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Kubernetes Security Specialist', 'assets/certs/cks.pdf', 'assets/notes/cks.pdf')">K8s Security Specialist <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Terraform + IaC', 'assets/certs/terraform.pdf', 'assets/notes/terraform.pdf')">Terraform IaC <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Azure DevOps CI/CD', 'assets/certs/azure-devops.pdf', 'assets/notes/azure-devops.pdf')">Azure DevOps CI/CD <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('GitHub Actions CI/CD', 'assets/certs/github-actions.pdf', 'assets/notes/github-actions.pdf')">GitHub Actions CI/CD <i class="fa fa-certificate"></i></div>
+                    </div>
+                  </div>
+
+                  <!-- Phase 12 -->
+                  <div class="mindmap-category" data-status="upcoming">
+                    <div class="category-node cat-c5" onclick="toggleMindmapNode(this)">
+                      <span class="cat-status upcoming"></span>
+                      Final Specialization
+                      <span class="cat-toggle"><i class="fa fa-chevron-down"></i></span>
+                    </div>
+                    <div class="cat-leaves">
+                      <div class="leaf-node" onclick="openCourseModal('SIEM & Log Analysis', '', '')">SIEM & Log Analysis > <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('SOC Analyst / Blue Team', '', '')">SOC Analyst / Blue Team  <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('OSCP Preparation', '', '')">OSCP Preparation  <i class="fa fa-certificate"></i></div>
+                      <div class="leaf-node" onclick="openCourseModal('Cloud Security Specialty', '', '')">Cloud Security  <i class="fa fa-certificate"></i></div>
+                    </div>
+                  </div>
+
+                  
+                </div><!-- /mindmap-branches -->
+
+              </div><!-- /mindmap-tree -->
+            </div><!-- /mindmap-container -->
+            <div class="pro-certs-section">
+  <h4 class="pro-certs-title">Professional Certifications</h4>
+  <div class="pro-certs-grid">
+    <a class="pro-cert-card" href="https://coursera.org/verify/professional-cert/5XGL7C1N33D3" target="_blank" rel="noopener">
+      <div class="pro-cert-icon"><i class="fa fa-google" aria-hidden="true"></i></div>
+      <div class="pro-cert-body">
+        <span class="pro-cert-name">Google Project Management</span>
+        <span class="pro-cert-issuer">Google · Professional Certificate (7 courses) · Coursera</span>
+        <span class="pro-cert-date">Aug 2026</span>
+      </div>
+      <i class="fa fa-external-link pro-cert-link-icon" aria-hidden="true"></i>
+    </a>
+    <a class="pro-cert-card" href="https://coursera.org/verify/PDR8NYL888MD" target="_blank" rel="noopener">
+      <div class="pro-cert-icon"><i class="fa fa-windows" aria-hidden="true"></i></div>
+      <div class="pro-cert-body">
+        <span class="pro-cert-name">Project Delivery in Business Analysis and Capstone Project</span>
+        <span class="pro-cert-issuer">Microsoft · Coursera</span>
+        <span class="pro-cert-date">Aug 2026</span>
+      </div>
+      <i class="fa fa-external-link pro-cert-link-icon" aria-hidden="true"></i>
+    </a>
+    <a class="pro-cert-card" href="https://coursera.org/verify/professional-cert/Q5SBJMG0QRAJ" target="_blank" rel="noopener">
+  <div class="pro-cert-icon"><i class="fa fa-google" aria-hidden="true"></i></div>
+  <div class="pro-cert-body">
+    <span class="pro-cert-name">Google IT Support</span>
+    <span class="pro-cert-issuer">Google · Professional Certificate (5 courses) · Coursera</span>
+    <span class="pro-cert-date">Aug 2024</span>
+  </div>
+  <i class="fa fa-external-link pro-cert-link-icon" aria-hidden="true"></i>
+</a>
+
+  </div>
+</div>
+          </div>
+
+
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Course Modal -->
+    <div id="courseModalOverlay" class="course-modal-overlay" onclick="closeCourseModal(event)">
+      <div class="modal-content" onclick="event.stopPropagation()">
+        <button class="modal-close" onclick="closeCourseModal()"><i class="fa fa-times"></i></button>
+        <h4 id="modalCourseName">Course Name</h4>
+        <div class="modal-links">
+          <a id="modalCertLink" class="modal-btn" target="_blank" rel="noopener">
+            <i class="fa fa-certificate"></i>
+            <div class="modal-btn-text"><span>View Certificate</span><span class="modal-label">PDF credential</span></div>
+          </a>
+          <a id="modalNotesLink" class="modal-btn" target="_blank" rel="noopener">
+            <i class="fa fa-file-text-o"></i>
+            <div class="modal-btn-text"><span>View Study Notes</span><span class="modal-label">Learning recap</span></div>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>&copy; Dennis Eduardo Melara, 2026</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="./assets/js/sweet-scroll.min.js"></script>
+    <script src="./assets/js/google-analytics.js"></script>
+    <script src="./assets/js/main.js"></script>
+    
+    <script>
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      const bodyElement = document.body;
+
+const lightTheme = {
+  '--bg-color': '#EAF6FF', '--text-color': '#0B132B',
+  '--hero-bg': '#EAF6FF',
+  '--accent-color': '#1E5A9C', '--accent-hover': '#3E8FD6',
+  '--accent-text': '#ffffff'
+};
+const darkTheme = {
+  '--bg-color': '#05060E', '--text-color': '#F5F5F5',
+  '--hero-bg': '#05060E',
+  '--accent-color': '#5BC0BE', '--accent-hover': '#6FFFE9',
+  '--accent-text': '#0B132B'
+};
+
+      function applyTheme(theme) {
+        for (const [property, value] of Object.entries(theme)) {
+          bodyElement.style.setProperty(property, value);
+        }
+      }
+
+      const currentTheme = localStorage.getItem('theme');
+      if (currentTheme === 'dark') {
+        bodyElement.classList.add('dark-mode');
+        applyTheme(darkTheme);
+        themeIcon.classList.replace('fa-moon-o', 'fa-sun-o');
+      } else {
+        applyTheme(lightTheme);
+      }
+
+      themeToggleBtn.addEventListener('click', () => {
+        bodyElement.classList.toggle('dark-mode');
+        if (bodyElement.classList.contains('dark-mode')) {
+          localStorage.setItem('theme', 'dark');
+          applyTheme(darkTheme);
+          themeIcon.classList.replace('fa-moon-o', 'fa-sun-o');
+        } else {
+          localStorage.setItem('theme', 'light');
+          applyTheme(lightTheme);
+          themeIcon.classList.replace('fa-sun-o', 'fa-moon-o');
+        }
+      });
+    </script>
+
+    <script>
+      document.querySelectorAll('.ptab-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.ptab-btn').forEach(b => b.classList.remove('active'));
+          document.querySelectorAll('.ptab-panel').forEach(p => p.classList.remove('active'));
+          btn.classList.add('active');
+          document.getElementById(btn.getAttribute('data-target')).classList.add('active');
+        });
+      });
+    </script>
+
+    <script>
+      function toggleMindmapNode(nodeEl) {
+        const catEl = nodeEl.closest('.mindmap-category');
+        if (!catEl) return;
+        catEl.classList.toggle('expanded');
+      }
+
+      function openCourseModal(courseName, certPath, notesPath) {
+        const overlay = document.getElementById('courseModalOverlay');
+        document.getElementById('modalCourseName').textContent = courseName;
+        const certLink = document.getElementById('modalCertLink');
+        const notesLink = document.getElementById('modalNotesLink');
+        if (certPath && certPath !== '') { certLink.href = certPath; certLink.classList.remove('disabled'); }
+        else { certLink.href = '#'; certLink.classList.add('disabled'); }
+        if (notesPath && notesPath !== '') { notesLink.href = notesPath; notesLink.classList.remove('disabled'); }
+        else { notesLink.href = '#'; notesLink.classList.add('disabled'); }
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeCourseModal(event) {
+        if (event && event.target !== event.currentTarget) return;
+        document.getElementById('courseModalOverlay').classList.remove('active');
+        document.body.style.overflow = '';
+      }
+      document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeCourseModal(); });
+    </script>
+  </body>
+</html>
