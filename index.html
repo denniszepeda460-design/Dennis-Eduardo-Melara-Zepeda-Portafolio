@@ -430,7 +430,7 @@ body.dark-mode .pro-cert-card:hover { background: rgba(91,192,190,0.08); }
       <div class="header">
         <h1>
           <span class="site-title">Dennis Eduardo Melara</span>
-          <span class="site-description">Immigration Paralegal → Systems Engineer | Cybersecurity</span>
+          <span class="site-description">Immigration Paralegal | Systems Engineer | Cybersecurity</span>
         </h1>
         <div class="header-icons">
           <a aria-label="My LinkedIn Profile" target="_blank" href="https://www.linkedin.com/in/dennis-eduardo-melara-zepeda-241a33422/">
@@ -462,7 +462,13 @@ body.dark-mode .pro-cert-card:hover { background: rgba(91,192,190,0.08); }
           <img src="./perfil.jpg" alt="Professional Me" width="20%" style="border-radius: 50%" />
         </picture>
         <p>
-          I am a bilingual professional bridging the gap between legal operations and technology. With over 3 years of experience as an Immigration Paralegal in high-volume US law firms, I specialize in managing complex dockets and drafting legal motions. Concurrently pursuing a degree in Computer Systems Engineering, I apply technical logic to automate workflows and audit case files. Currently, I am actively transitioning into the Cybersecurity field, focusing on offensive and defensive security strategies to protect critical data infrastructure.
+          I am a bilingual professional bridging the gap between legal operations and technology. 
+          With over 3 years of experience as an Immigration Paralegal in high-volume US law firms, I
+           specialize in managing complex dockets and drafting legal motions. Concurrently pursuing 
+           a degree in Computer Systems Engineering, I apply technical logic to automate workflows
+            and audit case files. I am also building hands-on skills in Cybersecurity, focusing on
+             offensive and defensive security strategies, to better protect sensitive case data and
+              critical legal infrastructure.
         </p>
       </div>
 
@@ -478,8 +484,14 @@ body.dark-mode .pro-cert-card:hover { background: rgba(91,192,190,0.08); }
           <!-- ===== TAB: PARALEGAL ===== -->
           <div id="tab-paralegal" class="ptab-panel active">
             <h3>Legal Operations & Case Management</h3>
-            <p>Advanced management of legal workflows in high-volume, remote environments. I possess a proven track record of managing complex dockets across EOIR and USCIS jurisdictions. I have successfully drafted and filed over 1,500 motions, including Motions to Substitute (MTS), Terminate, Vacate, Sever, and Consolidate, maintaining strict compliance with judicial deadlines.</p>
-            <p>My expertise encompasses the entire application lifecycle, from initial narrative drafting and evidence assembly for I-589 (Asylum), I-765, and U-Visas, to executing Written Pleadings and Mendez-Rojas filings. I proactively audit case files for Biostamps and identity documents to prevent processing delays and educate clients on complex case outcomes.</p>
+            <p>Advanced management of legal workflows in high-volume, remote environments. 
+              I possess a proven track record of managing complex dockets across EOIR and USCIS jurisdictions. 
+              I have successfully drafted and filed over 1,500 motions, including Motions to Substitute (MTS), Terminate, 
+              Vacate, Sever, and Consolidate, maintaining strict compliance with judicial deadlines.</p>
+            <p>My expertise encompasses the entire application lifecycle, from initial narrative drafting and
+               evidence assembly for I-589 (Asylum), I-765, and U-Visas, to executing Written Pleadings and Mendez-Rojas 
+               filings. I proactively audit case files for biometric submissions and identity documents to prevent 
+               processing delays and educate clients on complex case outcomes.</p>
             <div class="skill-chips">
               <span>EOIR / USCIS Dockets</span>
               <span>Motion Litigation</span>
@@ -493,70 +505,93 @@ body.dark-mode .pro-cert-card:hover { background: rgba(91,192,190,0.08); }
 
           <!-- ===== TAB: SYSTEMS & AUTOMATION (Alternating Layout) ===== -->
           <div id="tab-automation" class="ptab-panel">
-            <h3>Technical Logic Applied to Legal Workflows</h3>
-            <p>Leveraging Systems Engineering principles, I optimize legal operations by identifying inefficiencies and deploying programmatic solutions. I develop custom scripts and tools to automatically audit case files, manage Box cloud directories, and ensure strict compliance with 30-day appeal deadlines.</p>
+            <h3>Certa - A Legal Operations Platform</h3>
+            <p>
+              Leveraging Systems Engineering principles, I designed and built Certa, an internal operations platform for
+               immigration law practice. Rather than patching workflows with one-off scripts, Certa unifies court docket 
+               monitoring, evidentiary audits, and case-readiness evaluation into a single system that connects federal 
+               court channels with the firm's document repository, automatically flagging compliance risks, missing
+                documentation, and testimonial inconsistencies before they reach the judge.
+            </p>
 
             <!-- Project #1: Media LEFT, Description RIGHT -->
             <div class="project-row">
               <div class="project-media">
-                <div class="placeholder-text"><i class="fa fa-play-circle" style="font-size:32px;display:block;margin-bottom:8px;"></i>Screenshot / Video<br>Coming Soon</div>
+                <img src="assets/img/Access.png" alt="Certa Access module - EOIR and Box connection status" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
               </div>
               <div class="project-detail">
-                <h4>EOIR Analyzer</h4>
-                <p>Python module that automatically audits case files, verifies compliance with 30-day appeal deadlines, and flags missing documents across EOIR dockets.</p>
+                <h4>Access - Federated Authorization Layer</h4>
+                <p>Authentication and connection-status module that gates Certa's audit pipeline. Verifies a live, 
+                  secure session with the EOIR federal court portal via Okta identity federation, and confirms integrity 
+                  of the firm's document repository connection before downstream modules can run. Built as a swappable 
+                  layer, allowing the same authorization pattern to adapt to other case management systems beyond Box.</p>
                 <div class="project-tech-icons">
                   <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/python.svg" alt="Python" style="filter: invert(55%) sepia(78%) saturate(491%) hue-rotate(166deg) brightness(96%) contrast(92%)" />
-                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/github.svg" alt="GitHub" />
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@latest/icons/okta.svg" alt="Okta" style="filter: invert(100%);" />
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@latest/icons/box.svg" alt="Box" style="filter: invert(100%);" />
                 </div>
               </div>
             </div>
 
-            <!-- Project #2: Description LEFT, Media RIGHT -->
-            <div class="project-row reverse">
-              <div class="project-media">
-                <div class="placeholder-text"><i class="fa fa-play-circle" style="font-size:32px;display:block;margin-bottom:8px;"></i>Screenshot / Video<br>Coming Soon</div>
-              </div>
+            <!-- Project #2: Media RIGHT, Description LEFT -->
+            <div class="project-row">
               <div class="project-detail">
-                <h4>Box Cloud Directory Manager</h4>
-                <p>Automated system for managing and organizing case files in Box cloud storage, with batch operations and compliance verification.</p>
+                <h4>Declarations Cross-Check - Evidentiary Audit Engine</h4>
+                <p>Automated audit module that cross-references courtroom testimony against the firm's internal 
+                  declaration repository, flagging inconsistencies, ambiguous language, and material discrepancies 
+                  that could trigger scrutiny under INA § 212(a)(6)(C)(i) (misrepresentation). Given a client's Alien
+                   Registration Number, it pulls the relevant filings and testimonial record from Box, then uses Gemini
+                    to semantically compare statements and surface contradictions a keyword search would miss, returning
+                     a structured report per case, with a history log of past audits across all active firm proceedings.
+</p>
                 <div class="project-tech-icons">
                   <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/python.svg" alt="Python" style="filter: invert(55%) sepia(78%) saturate(491%) hue-rotate(166deg) brightness(96%) contrast(92%)" />
-                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/icloud.svg" alt="Cloud" style="filter: invert(50%) sepia(20%) saturate(500%) hue-rotate(180deg)" />
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@latest/icons/box.svg" alt="Box" style="filter: invert(100%);" />
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@latest/icons/googlegemini.svg" alt="Gemini" style="filter: invert(100%);" />
                 </div>
+              </div>
+              <div class="project-media">
+                <img src="assets/img/Declarations.png" alt="Certa Declarations Cross-Check module - evidentiary audit report" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
               </div>
             </div>
 
             <!-- Project #3: Media LEFT, Description RIGHT -->
             <div class="project-row">
               <div class="project-media">
-                <div class="placeholder-text"><i class="fa fa-play-circle" style="font-size:32px;display:block;margin-bottom:8px;"></i>Screenshot / Video<br>Coming Soon</div>
+                <img src="assets/img/Alerts.png" alt="Certa Operational Alerts module - court docket monitor" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
               </div>
               <div class="project-detail">
-                <h4>Workflow Automation Scripts</h4>
-                <p>Collection of custom scripts that automate repetitive legal tasks — from document generation to deadline tracking and client notifications.</p>
+                <h4>Operational Alerts - Court Docket Monitor</h4>
+                <p>Real-time monitoring module that watches the EOIR docket for new court notifications and 
+                  scheduled hearing updates, then logs completed case analyses per client. Each entry links back 
+                  to the client's A-Number and generates downloadable pleadings once an analysis is finished, giving
+                   the firm a live, searchable feed of docket activity instead of manually checking court portals</p>
                 <div class="project-tech-icons">
                   <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/python.svg" alt="Python" style="filter: invert(55%) sepia(78%) saturate(491%) hue-rotate(166deg) brightness(96%) contrast(92%)" />
-                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/gnubash.svg" alt="Bash" style="filter: invert(50%)" />
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@latest/icons/box.svg" alt="Box" style="filter: invert(100%);" />
                 </div>
               </div>
             </div>
 
-            <!-- Project #4: Description LEFT, Media RIGHT -->
-            <div class="project-row reverse">
-              <div class="project-media">
-                <div class="placeholder-text"><i class="fa fa-play-circle" style="font-size:32px;display:block;margin-bottom:8px;"></i>Screenshot / Video<br>Coming Soon</div>
-              </div>
+            <!-- Project #4: Media RIGHT, Description LEFT -->
+            <div class="project-row">
               <div class="project-detail">
-                <h4>IT Security Protocols</h4>
-                <p>Documentation and implementation of security best practices for office IT infrastructure, including access controls and data handling procedures.</p>
+                <h4>Case Readiness Audit - Pre-Filing Comprehensive Audit</h4>
+                <p>Evaluation module that runs an exhaustive completeness check on a case before it's submitted to the 
+                  immigration judge. Given a client's A-Number and a link to their Box case folder, it automatically
+                   extracts client metadata, cross-references the filing against the statutory checklist for that case
+                    type, and returns a readiness percentage with a detailed audit record, catching missing evidence
+                     or documentation gaps before they become a problem in court.</p>
                 <div class="project-tech-icons">
-                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/windows.svg" alt="Windows" style="filter: invert(45%) sepia(60%) saturate(600%) hue-rotate(185deg)" />
-                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/linux.svg" alt="Linux" style="filter: invert(50%)" />
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@3.4.0/icons/python.svg" alt="Python" style="filter: invert(55%) sepia(78%) saturate(491%) hue-rotate(166deg) brightness(96%) contrast(92%)" />
+                  <img height="28" width="28" src="https://unpkg.com/simple-icons@latest/icons/box.svg" alt="Box" style="filter: invert(100%);" />
                 </div>
               </div>
+              <div class="project-media">
+                <img src="assets/img/Readiness.png" alt="Certa Case Readiness Audit module - pre-filing completeness evaluation" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">
+              </div>
             </div>
-          </div>
-
+            </div>
                     <!-- ===== TAB: CYBERSECURITY MIND MAP ===== -->
           <div id="tab-cyber" class="ptab-panel">
             <h3 style="text-align:center;margin:0 0 6px;">Cybersecurity & Networks Roadmap</h3>
